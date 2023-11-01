@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 @Data // getters and setters
 @Entity
@@ -27,13 +28,17 @@ public class Student {
     private String name;
     private String email;
     private LocalDate dob; // date of birth
+    @Transient
     private Integer age;
 
     @Autowired
-    public Student(String name, String email, LocalDate dob, Integer age) {
+    public Student(String name, String email, LocalDate dob) {
         this.name = name;
         this.email = email;
         this.dob = dob;
-        this.age = age;
+    }
+
+    public Integer getAge() {
+        return Period.between(this.dob, LocalDate.now()).getYears();
     }
 }
