@@ -18,13 +18,19 @@ public class StudentConfig {
                 LocalDate.of(1000, 1, 5)
             );
 
+            Student Rose = new Student(
+                    "Rose",
+                    "rosenagatomo@yahoo.com.br",
+                    LocalDate.of(1972, 4, 28)
+            );
+
             Student Jun = new Student(
                     "Jun",
                     "gustavonagatomo@gmail.com",
                     LocalDate.of(2003, 2, 11)
             );
 
-            repository.saveAll(List.of(Jorge, Jun));
+            repository.saveAll(List.of(Jorge, Jun, Rose));
         };
     }
 }
