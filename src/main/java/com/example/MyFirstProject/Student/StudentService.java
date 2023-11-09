@@ -1,5 +1,6 @@
 package com.example.MyFirstProject.Student;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -37,5 +39,20 @@ public class StudentService {
 		if(!exists)
 			throw new IllegalStateException("Student with id " + studentId + " does not exist");
 		studentRepository.deleteById(studentId);
+	}
+
+	@Transactional
+	public void updateStudent(Long studentId, String studentName, String studentEmail) {
+		boolean exists = studentRepository.existsById(studentId);
+		if(!exists)
+			throw new IllegalStateException("Student with id " + studentId + " does not exist");
+		Student student = studentRepository.getReferenceById(studentId);
+		if(studentName != null && !studentName.isEmpty() && !student.getName().equals(studentName))
+			student.setName(studentName);
+if(studentEmail != null && !studentEmail.isEmpty() && !student.getEmail().equals(studentEmail)) {
+			if(studentRepository.findStudentByEmail(studentEmail).isPresent())
+				throw new IllegalStateException("Email taken");
+			student.setEmail(studentEmail);
+		}
 	}
 }
