@@ -14,5 +14,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
         The annotation above is the JPQL (Java Persistence Query Language) equivalent to the following SQL query:
         SELECT * FROM student WHERE email = ?
     */
-    Optional<Student> findStudentByEmail(String email);
+    Student findStudentByEmail(String email);
 }
