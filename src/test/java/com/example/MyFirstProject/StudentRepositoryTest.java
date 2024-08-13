@@ -1,4 +1,4 @@
-package com.example.MyFirstProject.repository;
+package com.example.MyFirstProject;
 
 
 import com.example.MyFirstProject.Student.Student;
@@ -31,5 +31,6 @@ public class StudentRepositoryTest {
         // assert
         Assertions.assertThat(actual).isPresent();
         Assertions.assertThat(actual.get().getId()).isGreaterThan(0);
+        Assertions.assertThat(actual.get()).isEqualTo(expected);
     }
 }
