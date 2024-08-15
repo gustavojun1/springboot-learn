@@ -54,7 +54,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    public void givenStudentPresent_whenAddNewStudent_thenThrowsIllegalStateException() {
+    public void givenStudentPresent_whenAddNewStudent_thenThrowIllegalStateException() {
 
         // when "studentRepository" calls "findStudentByEmail" method with exactly "email1" as parameter, then return "student", as if it's already in the database
         when(studentRepository.findStudentByEmail(student.getEmail())).thenReturn(Optional.of(student));
@@ -64,7 +64,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    public void givenStudentNotPresent_whenDeleteStudent_thenThrowsIllegalStateException() {
+    public void givenStudentNotPresent_whenDeleteStudent_thenThrowIllegalStateException() {
 
         when(studentRepository.existsById(student.getId())).thenReturn(false);
 
@@ -81,5 +81,9 @@ public class StudentServiceTest {
 
         verify(studentRepository).deleteById(student.getId());
 
+    }
+
+    @Test
+    public void givenStudentNotPresent_whenUpdateStudent_thenThrowIllegalStateException() {
     }
 }
