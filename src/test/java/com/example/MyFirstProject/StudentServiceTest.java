@@ -46,7 +46,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    public void givenStudentAlreadyPresent_whenAddNewStudent_thenThrowsIllegalStateException() {
+    public void givenStudentPresent_whenAddNewStudent_thenThrowsIllegalStateException() {
 
         Student student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
 
@@ -56,4 +56,10 @@ public class StudentServiceTest {
         Assertions.assertThrows(IllegalStateException.class,() -> studentService.addNewStudent(student));
 
     }
+
+    @Test
+    public void givenStudent_whenEmailAlreadyTaken_thenThrowsIllegalStateException() {
+
+    }
+
 }
