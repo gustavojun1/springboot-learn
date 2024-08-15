@@ -85,5 +85,13 @@ public class StudentServiceTest {
 
     @Test
     public void givenStudentNotPresent_whenUpdateStudent_thenThrowIllegalStateException() {
+
+        when(studentRepository.existsById(student.getId())).thenReturn(false);
+
+        // with the same data
+        Assertions.assertThrows(IllegalStateException.class, () -> studentService.updateStudent(student.getId(), student.getName(), student.getEmail()));
+
+        // with new data
+        Assertions.assertThrows(IllegalStateException.class, () -> studentService.updateStudent(student.getId(), "another name", "another email"));
     }
 }
