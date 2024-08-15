@@ -94,4 +94,21 @@ public class StudentServiceTest {
         // with new data
         Assertions.assertThrows(IllegalStateException.class, () -> studentService.updateStudent(student.getId(), "another name", "another email"));
     }
+
+    @Test
+    public void givenStudentPresent_whenUpdateStudentWithNoChanges_thenNoChangesApplied() {
+
+        when(studentRepository.existsById(student.getId())).thenReturn(true);
+
+        when(studentRepository.getReferenceById(student.getId())).thenReturn(student);
+
+        Student prev = new Student(student.getName(), student.getEmail(), student.getDob());
+
+        studentService.updateStudent(student.getId(), student.getName(), student.getEmail());
+
+        verify(student, Mockito.never()).setName(Mockito.any(String.class));
+        verify(student, Mockito.never()).setEmail(Mockito.any(String.class));
+        verify(studentRepository, Mockito.never()).save(Mockito.any(Student.class));
+
+    }
 }
