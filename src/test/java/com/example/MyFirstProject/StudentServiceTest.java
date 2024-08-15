@@ -3,7 +3,7 @@ package com.example.MyFirstProject;
 import com.example.MyFirstProject.Student.Student;
 import com.example.MyFirstProject.Student.StudentRepository;
 import com.example.MyFirstProject.Student.StudentService;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,19 +29,31 @@ public class StudentServiceTest {
     @Test
     public void givenStudent_whenEmailNotTaken_thenStudentIsSaved() {
         
-        Student expected = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
+        Student student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
 
         // when the method "save" from studentRepository is called on any instance of Student class
-        // then, the "save" method should return the "expected" object
-        // this way, we're mocking the database to "store" the above created "expected" object
-        when(studentRepository.save(Mockito.any(Student.class))).thenReturn(expected);
+        // then, the "save" method should return the "student" object
+        // this way, we're mocking the database to "store" the above created "student" object
+        when(studentRepository.save(Mockito.any(Student.class))).thenReturn(student);
 
-        // when the method "findStudentByEmail" of "studentRepository" is called specifically with the email of the "expected" object
+        // when the method "findStudentByEmail" of "studentRepository" is called specifically with the email of the "student" object
         // then, return an empty response (i.e., the email was not taken)
-        when(studentRepository.findStudentByEmail(expected.getEmail())).thenReturn(Optional.empty());
+        when(studentRepository.findStudentByEmail(student.getEmail())).thenReturn(Optional.empty());
 
-        studentService.addNewStudent(expected);
+        studentService.addNewStudent(student);
 
-        verify(studentRepository).save(expected); // verify if method "save" from "studentRepository" was indeed being called (it's ok since "save" method is from the framework and can be assumed to be fully functional)
+        verify(studentRepository).save(student); // verify if method "save" from "studentRepository" was indeed being called (it's ok since "save" method is from the framework and can be assumed to be fully functional)
+    }
+
+    @Test
+    public void givenStudent_whenEmailAlreadyTaken_thenThrowsIllegalStateException() {
+
+        Student student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
+
+        // when "studentRepository" calls "findStudentByEmail" method with exactly "email1" as parameter, then return "student", as if it's already in the database
+        when(studentRepository.findStudentByEmail(student.getEmail())).thenReturn(Optional.of(student));
+
+        Assertions.assertThrows(IllegalStateException.class,() -> studentService.addNewStudent(student));
+
     }
 }
