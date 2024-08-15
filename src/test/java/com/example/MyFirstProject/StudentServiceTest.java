@@ -29,12 +29,8 @@ public class StudentServiceTest {
     @InjectMocks // injects into the following object all the dependencies mocked by @Mock (or @Spy), and thus wiring them
     private StudentService studentService;
 
+    @Mock
     private Student student;
-
-    @BeforeEach
-    public void setUp() {
-        student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
-    }
 
     @Test
     public void givenStudentNotPresent_whenAddNewStudent_thenStudentIsSaved() {
@@ -86,6 +82,9 @@ public class StudentServiceTest {
     @Test
     public void givenStudentNotPresent_whenUpdateStudent_thenThrowIllegalStateException() {
 
+        when(student.getName()).thenReturn("name1");
+        when(student.getEmail()).thenReturn("email1");
+
         when(studentRepository.existsById(student.getId())).thenReturn(false);
 
         // with the same data
@@ -97,6 +96,10 @@ public class StudentServiceTest {
 
     @Test
     public void givenStudentPresent_whenUpdateStudentWithNoChanges_thenNoChangesApplied() {
+
+        when(student.getName()).thenReturn("name1");
+        when(student.getEmail()).thenReturn("email1");
+        when(student.getDob()).thenReturn(LocalDate.of(2017, 12, 03));
 
         when(studentRepository.existsById(student.getId())).thenReturn(true);
 
