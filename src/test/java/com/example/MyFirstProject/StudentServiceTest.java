@@ -17,8 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class) // to setup mockito alongside junit
 public class StudentServiceTest {
@@ -110,6 +109,27 @@ public class StudentServiceTest {
         verify(student, Mockito.never()).setName(Mockito.any(String.class));
         verify(student, Mockito.never()).setEmail(Mockito.any(String.class));
         verify(studentRepository, Mockito.never()).save(Mockito.any(Student.class));
+
+    }
+
+    @Test
+    public void givenStudentPresent_whenUpdateName_thenOnlyNameUpdated() {
+
+        student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
+
+        String new_name = "new name";
+
+        Student prev = new Student(student.getName(), student.getEmail(), student.getDob());
+
+        when(studentRepository.existsById(student.getId())).thenReturn(true);
+
+        when(studentRepository.getReferenceById(student.getId())).thenReturn(student);
+
+        studentService.updateStudent(student.getId(), new_name, student.getEmail());
+
+        Assertions.assertEquals(prev.getEmail(), student.getEmail());
+        Assertions.assertEquals(prev.getDob(), student.getDob());
+        Assertions.assertEquals(new_name, student.getName());
 
     }
 }
