@@ -72,4 +72,14 @@ public class StudentServiceTest {
 
     }
 
+    @Test
+    public void givenStudentPresent_whenDeleteStudent_thenDeleteStudent() {
+
+        when(studentRepository.existsById(student.getId())).thenReturn(true);
+
+        studentService.deleteStudent(student.getId());
+
+        verify(studentRepository).deleteById(student.getId());
+
+    }
 }
