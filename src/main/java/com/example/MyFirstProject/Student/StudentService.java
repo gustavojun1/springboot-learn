@@ -44,12 +44,16 @@ public class StudentService {
 	@Transactional
 	public void updateStudent(Long studentId, String studentName, String studentEmail) {
 		boolean exists = studentRepository.existsById(studentId);
+
 		if(!exists)
 			throw new IllegalStateException("Student with id " + studentId + " does not exist");
+
 		Student student = studentRepository.getReferenceById(studentId);
+
 		if(studentName != null && !studentName.isEmpty() && !student.getName().equals(studentName))
 			student.setName(studentName);
-if(studentEmail != null && !studentEmail.isEmpty() && !student.getEmail().equals(studentEmail)) {
+
+		if(studentEmail != null && !studentEmail.isEmpty() && !student.getEmail().equals(studentEmail)) {
 			if(studentRepository.findStudentByEmail(studentEmail).isPresent())
 				throw new IllegalStateException("Email taken");
 			student.setEmail(studentEmail);
