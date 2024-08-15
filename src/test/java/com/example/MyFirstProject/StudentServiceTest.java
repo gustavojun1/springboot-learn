@@ -27,7 +27,7 @@ public class StudentServiceTest {
     private StudentService studentService;
 
     @Test
-    public void givenStudent_whenEmailNotTaken_thenStudentIsSaved() {
+    public void givenStudentNotPresent_whenAddNewStudent_thenStudentIsSaved() {
         
         Student student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
 
@@ -46,7 +46,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    public void givenStudent_whenEmailAlreadyTaken_thenThrowsIllegalStateException() {
+    public void givenStudentAlreadyPresent_whenAddNewStudent_thenThrowsIllegalStateException() {
 
         Student student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
 
