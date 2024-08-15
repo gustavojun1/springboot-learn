@@ -3,7 +3,10 @@ package com.example.MyFirstProject;
 import com.example.MyFirstProject.Student.Student;
 import com.example.MyFirstProject.Student.StudentRepository;
 import com.example.MyFirstProject.Student.StudentService;
+import net.bytebuddy.implementation.bytecode.Throw;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,11 +29,16 @@ public class StudentServiceTest {
     @InjectMocks // injects into the following object all the dependencies mocked by @Mock (or @Spy), and thus wiring them
     private StudentService studentService;
 
+    private Student student;
+
+    @BeforeEach
+    public void setUp() {
+        student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
+    }
+
     @Test
     public void givenStudentNotPresent_whenAddNewStudent_thenStudentIsSaved() {
         
-        Student student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
-
         // when the method "save" from studentRepository is called on any instance of Student class
         // then, the "save" method should return the "student" object
         // this way, we're mocking the database to "store" the above created "student" object
@@ -48,8 +56,6 @@ public class StudentServiceTest {
     @Test
     public void givenStudentPresent_whenAddNewStudent_thenThrowsIllegalStateException() {
 
-        Student student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
-
         // when "studentRepository" calls "findStudentByEmail" method with exactly "email1" as parameter, then return "student", as if it's already in the database
         when(studentRepository.findStudentByEmail(student.getEmail())).thenReturn(Optional.of(student));
 
@@ -58,7 +64,11 @@ public class StudentServiceTest {
     }
 
     @Test
-    public void givenStudent_whenEmailAlreadyTaken_thenThrowsIllegalStateException() {
+    public void givenStudentNotPresent_whenDeleteStudent_thenThrowsIllegalStateException() {
+
+        when(studentRepository.existsById(student.getId())).thenReturn(false);
+
+        Assert.assertThrows(IllegalStateException.class, () -> studentService.deleteStudent(student.getId()));
 
     }
 
