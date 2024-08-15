@@ -105,8 +105,6 @@ public class StudentServiceTest {
 
         when(studentRepository.getReferenceById(student.getId())).thenReturn(student);
 
-        Student prev = new Student(student.getName(), student.getEmail(), student.getDob());
-
         studentService.updateStudent(student.getId(), student.getName(), student.getEmail());
 
         verify(student, Mockito.never()).setName(Mockito.any(String.class));
