@@ -168,9 +168,4 @@ public class StudentServiceTest {
         Assertions.assertThrows(IllegalStateException.class, () -> studentService.updateStudent(student.getId(), student.getName(), student2.getEmail()));
 
     }
-
-    @Test
-    public void asn() {
-        studentService.updateStudent(99L, "nome1", "email1");
-    }
 }
