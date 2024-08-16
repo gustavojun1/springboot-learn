@@ -4,6 +4,7 @@ import com.example.MyFirstProject.Student.Student;
 import com.example.MyFirstProject.Student.StudentRepository;
 import com.example.MyFirstProject.Student.StudentService;
 import net.bytebuddy.implementation.bytecode.Throw;
+import org.checkerframework.checker.nullness.Opt;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -84,7 +86,7 @@ public class StudentServiceTest {
         when(student.getName()).thenReturn("name1");
         when(student.getEmail()).thenReturn("email1");
 
-        when(studentRepository.existsById(student.getId())).thenReturn(false);
+        when(studentRepository.findById(student.getId())).thenReturn(Optional.empty());
 
         // with the same data
         Assertions.assertThrows(IllegalStateException.class, () -> studentService.updateStudent(student.getId(), student.getName(), student.getEmail()));
@@ -98,11 +100,8 @@ public class StudentServiceTest {
 
         when(student.getName()).thenReturn("name1");
         when(student.getEmail()).thenReturn("email1");
-        when(student.getDob()).thenReturn(LocalDate.of(2017, 12, 03));
 
-        when(studentRepository.existsById(student.getId())).thenReturn(true);
-
-        when(studentRepository.getReferenceById(student.getId())).thenReturn(student);
+        when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
 
         studentService.updateStudent(student.getId(), student.getName(), student.getEmail());
 
@@ -121,9 +120,7 @@ public class StudentServiceTest {
 
         Student prev = new Student(student.getName(), student.getEmail(), student.getDob());
 
-        when(studentRepository.existsById(student.getId())).thenReturn(true);
-
-        when(studentRepository.getReferenceById(student.getId())).thenReturn(student);
+        when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
 
         studentService.updateStudent(student.getId(), new_name, student.getEmail());
 
@@ -142,9 +139,8 @@ public class StudentServiceTest {
 
         Student prev = new Student(student.getName(), student.getEmail(), student.getDob());
 
-        when(studentRepository.existsById(student.getId())).thenReturn(true);
+        when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
 
-        when(studentRepository.getReferenceById(student.getId())).thenReturn(student);
 
         studentService.updateStudent(student.getId(), student.getName(), new_email);
 
