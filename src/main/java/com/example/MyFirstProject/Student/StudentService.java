@@ -43,10 +43,6 @@ public class StudentService {
 
 	@Transactional
 	public void updateStudent(Long studentId, String studentName, String studentEmail) {
-//		boolean exists = studentRepository.existsById(studentId);
-//
-//		if(!exists)
-//			throw new IllegalStateException("Student with id " + studentId + " does not exist");
 
 		Optional<Student> student = studentRepository.findById(studentId);
 
