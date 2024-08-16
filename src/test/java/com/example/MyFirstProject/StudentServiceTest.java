@@ -153,4 +153,21 @@ public class StudentServiceTest {
         Assertions.assertEquals(new_email, student.getEmail());
 
     }
+
+    @Test
+    public void givenStudentPresent_whenUpdateEmailAlreadyTaken_thenThrowIllegalStateException() {
+
+        when(student.getEmail()).thenReturn("email1");
+
+        Student student2 = new Student("name2", "email2", LocalDate.of(2002, 12, 11));
+
+        when(studentRepository.existsById(student.getId())).thenReturn(true);
+
+        when(studentRepository.getReferenceById(student.getId())).thenReturn(student);
+
+        when(studentRepository.findStudentByEmail(student2.getEmail())).thenReturn(Optional.of(student2));
+
+        Assertions.assertThrows(IllegalStateException.class, () -> studentService.updateStudent(student.getId(), student.getName(), student2.getEmail()));
+
+    }
 }
