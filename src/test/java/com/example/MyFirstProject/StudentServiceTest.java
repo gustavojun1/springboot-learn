@@ -132,4 +132,25 @@ public class StudentServiceTest {
         Assertions.assertEquals(new_name, student.getName());
 
     }
+
+    @Test
+    public void givenStudentPresent_whenUpdateEmail_thenOnlyEmailUpdated() {
+
+        student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
+
+        String new_email = "new email";
+
+        Student prev = new Student(student.getName(), student.getEmail(), student.getDob());
+
+        when(studentRepository.existsById(student.getId())).thenReturn(true);
+
+        when(studentRepository.getReferenceById(student.getId())).thenReturn(student);
+
+        studentService.updateStudent(student.getId(), student.getName(), new_email);
+
+        Assertions.assertEquals(prev.getName(), student.getName());
+        Assertions.assertEquals(prev.getDob(), student.getDob());
+        Assertions.assertEquals(new_email, student.getEmail());
+
+    }
 }
