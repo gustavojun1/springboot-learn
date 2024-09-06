@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -100,8 +99,6 @@ public class StudentControllerTest {
     public void givenStudentId_whenAlreadyPresent_thenDeleteStudent() throws Exception {
         Long student_id = 1L; // using a fixed ID because it's only defined when the repository actually saves the object
 
-        Student student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
-
 //        doNothing().when(studentService).deleteStudent(student.getId());
         willDoNothing().given(studentService).deleteStudent(student_id);
 
@@ -113,5 +110,21 @@ public class StudentControllerTest {
         response.andExpect(MockMvcResultMatchers.status().isNoContent()); // 204 - no content
 
         then(studentService).should(times(1)).deleteStudent(student_id);
+    }
+
+    @Test
+    public void givenStudentId_whenNotPresent_thenReturnNotFound() throws Exception {
+
+        Long invalid_id = 1L;
+
+        willThrow(new IllegalStateException("Student not found")).given(studentService).deleteStudent(invalid_id);
+
+        ResultActions response = mockMvc.perform(
+                delete("/api/v1/student/" + invalid_id)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
+
     }
 }
