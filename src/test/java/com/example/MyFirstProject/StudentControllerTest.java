@@ -19,8 +19,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 
@@ -39,11 +42,11 @@ public class StudentControllerTest {
     private ObjectMapper objectMapper;
 
     // @Autowired does not work here because this is a POJO (Plain Old Java Object), not a specialized one that Spring can manage like controllers or services
-    private Student student;
+//    private Student student;
 
     @Test
     public void givenStudent_whenRegisterNewStudent_thenAddNewStudent() throws Exception {
-        student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
+        Student student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
 
         // given() is a more "BDD way" to write mocks than when().then() (though both achieve the same results)
         given(
@@ -65,6 +68,30 @@ public class StudentControllerTest {
     }
 
     @Test
+    public void whenGetStudentList_thenReturnStudents() throws Exception {
+        Student student1 = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
 
+        Student student2 = new Student("name2", "email2", LocalDate.of(2009, 02, 05));
+
+        List<Student> studentList = Arrays.asList(student1, student2);
+
+        given(
+                studentService.getStudents()
+        ).willAnswer(
+                (invocation -> studentList)
+        );
+
+        ResultActions response = mockMvc.perform(
+                get("/api/v1/student/")
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        response
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(studentList.size()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value(student1.getEmail()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].email").value(student2.getEmail()))
+        ;
+    }
 
 }
