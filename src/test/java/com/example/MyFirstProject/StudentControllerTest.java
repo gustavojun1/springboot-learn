@@ -22,9 +22,8 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
 @WebMvcTest(controllers = StudentController.class) // set up environment for (only) Spring MVC components
@@ -94,4 +93,22 @@ public class StudentControllerTest {
         ;
     }
 
+    @Test
+    public void givenStudentId_whenAlreadyPresent_thenDeleteStudent() throws Exception {
+        Long student_id = 1L; // using a fixed ID because it's only defined when the repository actually saves the object
+
+        Student student = new Student("name1", "email1", LocalDate.of(2017, 12, 03));
+
+//        doNothing().when(studentService).deleteStudent(student.getId());
+        willDoNothing().given(studentService).deleteStudent(student_id);
+
+        ResultActions response = mockMvc.perform(
+                delete("/api/v1/student/" + student_id)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        response.andExpect(MockMvcResultMatchers.status().isNoContent()); // 204 - no content
+
+        then(studentService).should(times(1)).deleteStudent(student_id);
+    }
 }
