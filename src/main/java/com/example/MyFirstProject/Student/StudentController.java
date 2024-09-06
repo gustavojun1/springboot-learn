@@ -29,8 +29,12 @@ public class StudentController {
 
 	@DeleteMapping(path="{studentId}")
 	public ResponseEntity<Void> deleteStudent(@PathVariable("studentId") Long studentId) {
-		studentService.deleteStudent(studentId);
-		return ResponseEntity.noContent().build();
+		try {
+			studentService.deleteStudent(studentId);
+			return ResponseEntity.noContent().build();
+		} catch (IllegalStateException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@PutMapping(path="{studentId}")
