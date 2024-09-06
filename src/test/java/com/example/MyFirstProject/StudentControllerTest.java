@@ -63,7 +63,10 @@ public class StudentControllerTest {
         );
 
         // asserts whether the HTTP response code is "201 Created"
-        response.andExpect(MockMvcResultMatchers.status().isCreated());
+        response.andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(student.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(student.getEmail()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dob").value(student.getDob().toString()));
     }
 
     @Test
