@@ -24,10 +24,11 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 
-@WebMvcTest(controllers = StudentController.class) // autoconfigure tests that focuses only on Spring MVC components
+@WebMvcTest(controllers = StudentController.class) // set up environment for (only) Spring MVC components
 @AutoConfigureMockMvc(addFilters = false) // to avoid token security issues (otherwise @WebMvcTest already configures MockMvc)
 @ExtendWith(MockitoExtension.class)
 public class StudentControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -37,7 +38,7 @@ public class StudentControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // @Autowired does not work because this is a POJO (Plain Old Java Object), not a specialized one that Spring can manage like controllers or services
+    // @Autowired does not work here because this is a POJO (Plain Old Java Object), not a specialized one that Spring can manage like controllers or services
     private Student student;
 
     @Test
@@ -62,4 +63,8 @@ public class StudentControllerTest {
         // asserts whether the HTTP response code is "201 Created"
         response.andExpect(MockMvcResultMatchers.status().isCreated());
     }
+
+    @Test
+
+
 }
